@@ -49,5 +49,5 @@ app.*.map.json
 /android/app/release
 
 # Secrets
-server/.secret
-lib/.secret.dart
+.env
+server/.env
