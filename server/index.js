@@ -1,6 +1,7 @@
 // Import PACKAGE
 const express = require('express');
 const mongoose = require('mongoose');
+require('dotenv').config();
 
 // Import Files
 const authRouter = require('./routes/auth.js');
@@ -9,7 +10,7 @@ const authRouter = require('./routes/auth.js');
 const PORT = 3000;
 
 // MongoDB Url Path
-const db = 'mongodb+srv://saifymatteo:TCfdc00zOdpcDvx5@cluster0.vtonx.mongodb.net/?retryWrites=true&w=majority';
+const db = `mongodb+srv://${process.env.USER_NAME}:${process.env.USER_PASS}@cluster0.vtonx.mongodb.net/?retryWrites=true&w=majority`;
 
 // Initialize constant [app]
 const app = express();
