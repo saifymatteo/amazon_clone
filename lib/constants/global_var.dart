@@ -1,7 +1,7 @@
-import 'package:amazon_clone/.secret.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-String uri = 'http://$ipAdd:3000';
+String uri = 'http://${dotenv.env['ipEthernet']}:3000';
 
 class GlobalVariables {
   // --------------------------- COLORS ---------------------------
