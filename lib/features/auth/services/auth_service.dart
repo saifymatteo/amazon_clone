@@ -4,6 +4,7 @@ import 'package:amazon_clone/common/widgets/bottom_bar.dart';
 import 'package:amazon_clone/constants/error_handling.dart';
 import 'package:amazon_clone/constants/global_var.dart';
 import 'package:amazon_clone/constants/utils.dart';
+import 'package:amazon_clone/features/admin/screens/admin_screen.dart';
 import 'package:amazon_clone/models/user.dart';
 import 'package:amazon_clone/providers/user_provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -86,7 +87,7 @@ class AuthService {
           final pref = await SharedPreferences.getInstance();
 
           // Get [User] Provider and call [setUser] method
-          userProvider(context: context).setUser(res.body);
+          final user = userProvider(context: context)..setUser(res.body);
 
           // Add String key to [SharedPreference]
           await pref.setString(
@@ -94,8 +95,20 @@ class AuthService {
             (jsonDecode(res.body) as Map<String, dynamic>)['token'].toString(),
           );
 
-          // Navigate to [HomeScreen]
-          navigatePushNamed(context: context, routename: BottomBar.routeName);
+          // Check for user type
+          if (user.user.type == 'user') {
+            // Navigate to [HomeScreen]
+            navigatePushNamed(
+              context: context,
+              routename: BottomBar.routeName,
+            );
+          } else {
+            // Navigate to [AdminScreen]
+            navigatePushNamed(
+              context: context,
+              routename: AdminScreen.routeName,
+            );
+          }
         },
       );
     } catch (e) {
@@ -103,13 +116,13 @@ class AuthService {
     }
   }
 
-  // Special method to avoid linter error on:
+  // Special method to avoid warning on:
   // "Do not use BuildContexts across async gaps."
   UserProvider userProvider({BuildContext? context}) {
     return Provider.of(context!, listen: false);
   }
 
-  // Same as above to avoid lint issue
+  // Same as above to avoid warning
   void navigatePushNamed({BuildContext? context, String? routename}) {
     Navigator.pushNamedAndRemoveUntil(context!, routename!, (route) => false);
   }
@@ -141,13 +154,12 @@ class AuthService {
       );
 
       // Decode the token request
-      final response = jsonDecode(tokenRes.body)
-          as bool; // TODO(saifymatteo) : Check later with this typecast
+      final response = jsonDecode(tokenRes.body) as bool;
 
       // Check the decoded request
       if (response == true) {
         final userRes = await http.get(
-          Uri.parse('$uri/api/tokenIsValid'),
+          Uri.parse('$uri/'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'x-auth-token': token,
