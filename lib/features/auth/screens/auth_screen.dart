@@ -28,8 +28,10 @@ class _AuthScreenState extends State<AuthScreen> {
   final _signUpFormKey = GlobalKey<FormState>();
   final _signInFormKey = GlobalKey<FormState>();
 
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController =
+      TextEditingController(text: 'drakey@mail.com');
+  final TextEditingController _passwordController =
+      TextEditingController(text: '123456789');
   final TextEditingController _nameController = TextEditingController();
 
   final AuthService authService = AuthService();
