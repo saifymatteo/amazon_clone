@@ -1,5 +1,6 @@
 import 'package:amazon_clone/common/widgets/bottom_bar.dart';
 import 'package:amazon_clone/constants/global_var.dart';
+import 'package:amazon_clone/features/admin/screens/admin_screen.dart';
 import 'package:amazon_clone/features/auth/screens/auth_screen.dart';
 import 'package:amazon_clone/features/auth/services/auth_service.dart';
 import 'package:amazon_clone/providers/user_provider.dart';
@@ -49,7 +50,6 @@ class FirstRoute extends StatefulWidget {
 }
 
 class _FirstRouteState extends State<FirstRoute> {
-  
   final authService = AuthService();
 
   @override
@@ -60,8 +60,11 @@ class _FirstRouteState extends State<FirstRoute> {
 
   @override
   Widget build(BuildContext context) {
-    final tokenValid =
-        Provider.of<UserProvider>(context, listen: false).user.token.isNotEmpty;
-    return tokenValid ? const BottomBar() : const AuthScreen();
+    final user = Provider.of<UserProvider>(context, listen: false).user;
+    return user.token.isNotEmpty
+        ? user.type == 'user'
+            ? const BottomBar()
+            : const AdminScreen()
+        : const AuthScreen();
   }
 }
