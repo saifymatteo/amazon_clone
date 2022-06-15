@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 // Import Files
+const adminRouter = require('./routes/admin.js');
 const authRouter = require('./routes/auth.js');
 
 // Set default PORT number
@@ -18,6 +19,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(authRouter);
+app.use(adminRouter);
 
 // Connection
 mongoose.connect(db)
