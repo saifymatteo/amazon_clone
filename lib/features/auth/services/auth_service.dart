@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:amazon_clone/common/widgets/bottom_bar.dart';
 import 'package:amazon_clone/constants/error_handling.dart';
@@ -6,10 +7,8 @@ import 'package:amazon_clone/constants/global_var.dart';
 import 'package:amazon_clone/constants/utils.dart';
 import 'package:amazon_clone/features/admin/screens/admin_screen.dart';
 import 'package:amazon_clone/models/user.dart';
-import 'package:amazon_clone/providers/user_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
@@ -116,17 +115,6 @@ class AuthService {
     }
   }
 
-  // Special method to avoid warning on:
-  // "Do not use BuildContexts across async gaps."
-  UserProvider userProvider({BuildContext? context}) {
-    return Provider.of(context!, listen: false);
-  }
-
-  // Same as above to avoid warning
-  void navigatePushNamed({BuildContext? context, String? routename}) {
-    Navigator.pushNamedAndRemoveUntil(context!, routename!, (route) => false);
-  }
-
   // Get user data function
   Future<void> getUserData({
     required BuildContext context,
@@ -138,6 +126,8 @@ class AuthService {
 
       // Get token from [SharePreferences]
       final token = pref.getString('x-auth-token');
+
+      log('Automatic Logged In: $token');
 
       // Check for null with [token]
       if (token == null) {
