@@ -6,6 +6,8 @@ require('dotenv').config()
 // Import Files
 const adminRouter = require('./routes/admin.js')
 const authRouter = require('./routes/auth.js')
+const productRouter = require('./routes/product.js')
+const userRouter = require('./routes/user.js')
 
 // Set default PORT number
 const PORT = 3000
@@ -20,6 +22,8 @@ const app = express()
 app.use(express.json())
 app.use(authRouter)
 app.use(adminRouter)
+app.use(productRouter)
+app.use(userRouter)
 
 // Connection
 mongoose.connect(db)
