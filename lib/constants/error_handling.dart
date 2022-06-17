@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:amazon_clone/constants/utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,6 +28,7 @@ void httpErrorHandle({
       );
       break;
     default:
+      log('Error Handling: ${response.body}');
       showSnackBar(context, response.body);
   }
 }
