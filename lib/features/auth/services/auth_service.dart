@@ -30,6 +30,7 @@ class AuthService {
         address: '',
         type: '',
         token: '',
+        cart: [],
       );
 
       // Make sign up request
@@ -127,7 +128,8 @@ class AuthService {
       // Get token from [SharePreferences]
       final token = pref.getString('x-auth-token');
 
-      log('Automatic Logged In: $token');
+      // Needed for automatic log in to work
+      log('Token: $token');
 
       // Check for null with [token]
       if (token == null) {
