@@ -17,7 +17,9 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_dotenv: ^5.0.2
+  flutter_rating_bar: ^4.0.1
   http: ^0.13.4
+  pay: ^1.0.10
   provider: ^6.0.3
   shared_preferences: ^2.0.15
   very_good_analysis: ^3.0.0
@@ -30,7 +32,9 @@ flutter:
   uses-material-design: true
   assets:
     - .env
-    - asset/images/
+    - assets/images/
+    - assets/applepay.json
+    - assets/gpay.json
   # fonts:
   #   - family: Schyler
   #     fonts:
