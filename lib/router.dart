@@ -1,9 +1,13 @@
 import 'package:amazon_clone/common/widgets/bottom_bar.dart';
+import 'package:amazon_clone/features/address/screens/address_screen.dart';
 import 'package:amazon_clone/features/admin/screens/add_product_screen.dart';
 import 'package:amazon_clone/features/admin/screens/admin_screen.dart';
 import 'package:amazon_clone/features/auth/screens/auth_screen.dart';
 import 'package:amazon_clone/features/home/screens/category_deals.screen.dart';
 import 'package:amazon_clone/features/home/screens/home_screens.dart';
+import 'package:amazon_clone/features/product_details/screens/product_details_screen.dart';
+import 'package:amazon_clone/features/search/screens/search_screen.dart';
+import 'package:amazon_clone/models/product.dart';
 import 'package:flutter/material.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
@@ -49,6 +53,36 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute<Widget>(
         builder: (_) => CategoryDealScreen(
           category: category,
+        ),
+        settings: routeSettings,
+      );
+
+    // Search Screen route
+    case SearchScreen.routeName:
+      final searchQuery = routeSettings.arguments.toString();
+      return MaterialPageRoute<Widget>(
+        builder: (_) => SearchScreen(
+          searchQuery: searchQuery,
+        ),
+        settings: routeSettings,
+      );
+
+    // Product Detail Screen route
+    case ProductDetailScreen.routeName:
+      final product = routeSettings.arguments! as Product;
+      return MaterialPageRoute<Widget>(
+        builder: (_) => ProductDetailScreen(
+          product: product,
+        ),
+        settings: routeSettings,
+      );
+
+    // Address Screen route
+    case AddressScreen.routeName:
+    final totalAmount = routeSettings.arguments.toString();
+      return MaterialPageRoute<Widget>(
+        builder: (_) => AddressScreen(
+          totalAmount: totalAmount,
         ),
         settings: routeSettings,
       );
