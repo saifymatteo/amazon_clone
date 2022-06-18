@@ -1,7 +1,11 @@
 import 'package:amazon_clone/common/widgets/custom_text_field.dart';
 import 'package:amazon_clone/constants/global_var.dart';
+import 'package:amazon_clone/constants/utils.dart';
+import 'package:amazon_clone/features/address/widgets/address_services.dart';
+import 'package:amazon_clone/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:pay/pay.dart';
+import 'package:provider/provider.dart';
 
 class AddressScreen extends StatefulWidget {
   const AddressScreen({super.key, required this.totalAmount});
@@ -20,12 +24,60 @@ class _AddressScreenState extends State<AddressScreen> {
   final cityController = TextEditingController();
 
   final addressFormKey = GlobalKey<FormState>();
+  final addressService = AddressService();
+  String addressToBeUsed = '';
 
   final paymentItems = <PaymentItem>[];
 
-  void onApplyPayResult(Map<String, dynamic> res) {}
+  void onApplePayResult(Map<String, dynamic> res) {
+    if (userProvider(context: context).user.address.isEmpty) {
+      addressService.saveUserAddress(
+        context: context,
+        address: addressToBeUsed,
+      );
+    }
+    addressService.placeOrder(
+      context: context,
+      address: addressToBeUsed,
+      totalSum: double.parse(widget.totalAmount),
+    );
+  }
 
-  void onGooglePayResult(Map<String, dynamic> res) {}
+  void onGooglePayResult(Map<String, dynamic> res) {
+    if (userProvider(context: context).user.address.isEmpty) {
+      addressService.saveUserAddress(
+        context: context,
+        address: addressToBeUsed,
+      );
+    }
+    addressService.placeOrder(
+      context: context,
+      address: addressToBeUsed,
+      totalSum: double.parse(widget.totalAmount),
+    );
+  }
+
+  void payPressed(String addressFromProvider) {
+    addressToBeUsed = '';
+
+    final isForm = buildingController.text.isNotEmpty ||
+        areaController.text.isNotEmpty ||
+        pincodeController.text.isNotEmpty ||
+        cityController.text.isNotEmpty;
+
+    if (isForm) {
+      if (addressFormKey.currentState!.validate()) {
+        addressToBeUsed =
+            '${buildingController.text}, ${areaController.text}, $pincodeController.text}, ${cityController.text}';
+      } else {
+        throw Exception('Please enter all form');
+      }
+    } else if (addressFromProvider.isNotEmpty) {
+      addressToBeUsed = addressFromProvider;
+    } else {
+      showSnackBar(context, 'ERROR');
+    }
+  }
 
   @override
   void initState() {
@@ -50,8 +102,7 @@ class _AddressScreenState extends State<AddressScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // var address = context.watch<UserProvider>().user.address;
-    const address = '10231';
+    final address = context.watch<UserProvider>().user.address;
 
     return Scaffold(
       appBar: PreferredSize(
@@ -81,11 +132,11 @@ class _AddressScreenState extends State<AddressScreen> {
                           color: Colors.black12,
                         ),
                       ),
-                      child: const Padding(
-                        padding: EdgeInsets.all(8),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
                         child: Text(
                           address,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 18,
                           ),
                         ),
@@ -129,13 +180,16 @@ class _AddressScreenState extends State<AddressScreen> {
                 ),
               ),
               ApplePayButton(
+                onPressed: () {
+                  payPressed(address);
+                },
                 width: double.infinity,
                 height: 50,
                 margin: const EdgeInsets.only(top: 50),
                 style: ApplePayButtonStyle.whiteOutline,
                 type: ApplePayButtonType.buy,
                 paymentConfigurationAsset: 'applepay.json',
-                onPaymentResult: onApplyPayResult,
+                onPaymentResult: onApplePayResult,
                 paymentItems: paymentItems,
                 loadingIndicator: const Center(
                   child: CircularProgressIndicator(),
@@ -143,6 +197,9 @@ class _AddressScreenState extends State<AddressScreen> {
               ),
               const SizedBox(height: 10),
               GooglePayButton(
+                onPressed: () {
+                  payPressed(address);
+                },
                 width: double.infinity,
                 height: 50,
                 margin: const EdgeInsets.only(top: 15),
