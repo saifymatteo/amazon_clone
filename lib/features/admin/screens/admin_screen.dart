@@ -1,4 +1,6 @@
 import 'package:amazon_clone/constants/global_var.dart';
+import 'package:amazon_clone/features/admin/screens/analytics_screen.dart';
+import 'package:amazon_clone/features/admin/screens/orders_screen.dart';
 import 'package:amazon_clone/features/admin/screens/post_screen.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
@@ -19,8 +21,8 @@ class _AdminScreenState extends State<AdminScreen> {
 
   List<Widget> pages = [
     const PostScreen(),
-    const Center(child: Text('Analytics Page')),
-    const Center(child: Text('Orders Page')),
+    const AnalyticsScreen(),
+    const OrderScreen(),
   ];
 
   void updatePage(int page) {
@@ -47,7 +49,7 @@ class _AdminScreenState extends State<AdminScreen> {
               Container(
                 alignment: Alignment.topLeft,
                 child: Image.asset(
-                  'asset/images/amazon_in.png',
+                  'assets/images/amazon_in.png',
                   width: 120,
                   color: Colors.black,
                 ),
