@@ -52,9 +52,13 @@ class FirstRoute extends StatefulWidget {
 class _FirstRouteState extends State<FirstRoute> {
   final authService = AuthService();
 
+  Future<void> waitUserData() async {
+    await authService.getUserData(context: context);
+  }
+
   @override
   void initState() {
-    authService.getUserData(context: context);
+    waitUserData();
     super.initState();
   }
 
