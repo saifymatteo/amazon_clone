@@ -1,5 +1,6 @@
 const express = require('express')
 const auth = require('../middleware/auth')
+const Order = require('../models/order')
 const { Product } = require('../models/product')
 const User = require('../models/user')
 const userRouter = express.Router()
@@ -55,6 +56,68 @@ userRouter.delete('/api/remove-from-cart/:id', auth, async function (req, res) {
     user = await user.save()
 
     res.json(user)
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+userRouter.post('/api/save-user-address', auth, async function (req, res) {
+  try {
+    const { address } = req.body
+
+    let user = await User.findById(req.user)
+    user.address = address
+    user = await user.save()
+
+    res.json(user)
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+userRouter.post('/api/order', auth, async function (req, res) {
+  try {
+    const { cart, totalPrice, address } = req.body
+    const products = []
+
+    for (let index = 0; index < cart.length; index++) {
+      const product = await Product.findById(cart[index].product._id)
+
+      if (product.quantity >= cart[index].quantity) {
+        product.quantity -= cart[index].quantity
+        products.push({ product, quantity: cart[index].quantity })
+        await product.save()
+      } else {
+        return res.status(400).json({ message: `${product.name} is out of stock` })
+      }
+    }
+
+    let user = await User.findById(req.user)
+    user.cart = []
+    user = await user.save()
+
+    let order = new Order({
+      products,
+      totalPrice,
+      address,
+      userId: req.user,
+      orderedAt: new Date().getTime()
+    })
+
+    order = await order.save()
+
+    res.json(order)
+  } catch (e) {
+    res.status(500).json({ error: e.message })
+  }
+})
+
+// Fetch all user's orders
+userRouter.get('/api/orders/me', auth, async function (req, res) {
+  try {
+    const orders = await Order.find({ userId: req.user })
+
+    res.json(orders)
   } catch (e) {
     res.status(500).json({ error: e.message })
   }
