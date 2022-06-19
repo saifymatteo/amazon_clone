@@ -98,13 +98,13 @@ class AuthService {
           // Check for user type
           if (user.user.type == 'user') {
             // Navigate to [HomeScreen]
-            navigatePushNamed(
+            await navigatePushNamedRemovedUntil(
               context: context,
               routename: BottomBar.routeName,
             );
           } else {
             // Navigate to [AdminScreen]
-            navigatePushNamed(
+            await navigatePushNamedRemovedUntil(
               context: context,
               routename: AdminScreen.routeName,
             );
