@@ -44,6 +44,13 @@ UserProvider userProvider({BuildContext? context}) {
 }
 
 // Same as above to avoid warning
-void navigatePushNamed({BuildContext? context, String? routename}) {
-  Navigator.pushNamedAndRemoveUntil(context!, routename!, (route) => false);
+Future<void> navigatePushNamedRemovedUntil({
+  BuildContext? context,
+  String? routename,
+}) async {
+  await Navigator.pushNamedAndRemoveUntil(
+    context!,
+    routename!,
+    (route) => false,
+  );
 }
