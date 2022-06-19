@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-String uri = 'http://${dotenv.env['ipEthernet']}:3000';
+String uri = '${dotenv.env['ipAddress']}';
 
 class GlobalVariables {
   // --------------------------- COLORS ---------------------------
